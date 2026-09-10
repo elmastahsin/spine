@@ -36,16 +36,17 @@ struct MenuContentView: View {
             HStack(spacing: 12) {
                 languagePicker
 
+                Spacer()
+
                 Button {
                     NSWorkspace.shared.open(Self.githubURL)
                 } label: {
-                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                    Text(verbatim: "GitHub")
                 }
                 .buttonStyle(.plain)
+                .font(.footnote)
                 .foregroundStyle(.secondary)
                 .help(Self.githubURL.absoluteString)
-
-                Spacer()
 
                 Button {
                     NSApplication.shared.terminate(nil)
@@ -53,7 +54,11 @@ struct MenuContentView: View {
                     HStack(spacing: 4) {
                         Text(viewModel.localized("Quit", comment: "Quit menu item"))
                         Text(verbatim: "⌘Q")
+                            .font(.caption2)
                             .foregroundStyle(.tertiary)
+                            .padding(.horizontal, 4)
+                            .padding(.vertical, 1)
+                            .background(Color.primary.opacity(0.08), in: RoundedRectangle(cornerRadius: 3))
                     }
                 }
                 .buttonStyle(.plain)
@@ -84,30 +89,49 @@ struct MenuContentView: View {
     // MARK: - Brand
 
     private var brandHeader: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 10) {
             SpineMark()
-                .frame(width: 16, height: 20)
-            Text("Spine")
-                .font(.system(.subheadline, design: .rounded))
-                .fontWeight(.bold)
-                .foregroundStyle(.secondary)
-            Spacer()
+                .frame(width: 14, height: 18)
+                .padding(8)
+                .background(Color.accentColor.opacity(0.18), in: RoundedRectangle(cornerRadius: 9))
+
+            VStack(alignment: .leading, spacing: 1) {
+                HStack(spacing: 6) {
+                    Text("Spine")
+                        .font(.system(.subheadline, design: .rounded))
+                        .fontWeight(.bold)
+                    if let version = viewModel.appVersion {
+                        Text(verbatim: "v\(version)")
+                            .font(.caption2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1)
+                            .background(Color.primary.opacity(0.08), in: Capsule())
+                    }
+                }
+                Text(viewModel.localized("Headphone Posture Tracker", comment: "App subtitle shown under the app name"))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
     private var airPodsStatusBadge: some View {
         HStack(spacing: 5) {
+            Image(systemName: "airpods")
+                .font(.caption2)
+            Text(verbatim: "AirPods")
+                .font(.caption2)
+                .fontWeight(.medium)
             Circle()
                 .fill(Color.green)
                 .frame(width: 6, height: 6)
-            Text(viewModel.localized("AirPods · Motion Active", comment: "Status badge shown when AirPods head motion tracking is active"))
-                .font(.caption2)
-                .fontWeight(.medium)
-                .foregroundStyle(.green)
         }
         .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(Color.green.opacity(0.12), in: Capsule())
+        .padding(.vertical, 5)
+        .background(Color.primary.opacity(0.06), in: Capsule())
+        .overlay(Capsule().strokeBorder(Color.white.opacity(0.08)))
     }
 
     private var privacyBadge: some View {
@@ -169,35 +193,28 @@ struct MenuContentView: View {
 
     private func monitoringContent(status: PostureStatus) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            header(
-                icon: statusIcon(status),
-                tint: statusTint(status),
-                title: status == .bad
-                    ? viewModel.localized("Posture is bad", comment: "Status line when posture is bad")
-                    : viewModel.localized("Posture is good", comment: "Status line when posture is good")
-            )
+            statusCard(status: status)
+
+            headVisualizationCard(status: status)
 
             if let deviation = viewModel.currentDeviationDegrees {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        Text(viewModel.localized("Deviation:", comment: "Label prefix for the live posture deviation reading"))
-                            .foregroundStyle(.secondary)
+                        Text(verbatim: "0° \(viewModel.localized("Neutral", comment: "Label for the zero/baseline end of the deviation scale"))")
                         Spacer()
-                        Text(verbatim: "\(Int(deviation.rounded()))°")
-                            .monospacedDigit()
+                        Text(verbatim: "\(viewModel.localized("Threshold:", comment: "Label prefix for the current sensitivity threshold, shown above the deviation meter")) \(Int(viewModel.settings.sensitivity.thresholdDegrees))°")
                             .fontWeight(.semibold)
                             .foregroundStyle(statusTint(status))
+                        Spacer()
+                        Text(verbatim: "\(Int(deviationMeterCap))° \(viewModel.localized("Max", comment: "Label for the top end of the deviation scale"))")
                     }
-                    .font(.subheadline)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
 
                     DeviationMeter(
                         deviationDegrees: deviation,
                         thresholdDegrees: viewModel.settings.sensitivity.thresholdDegrees
                     )
-
-                    Text(verbatim: "\(viewModel.localized("Threshold:", comment: "Label prefix for the current sensitivity threshold, shown under the deviation meter")) \(Int(viewModel.settings.sensitivity.thresholdDegrees))°")
-                        .font(.caption2)
-                        .foregroundStyle(.tertiary)
                 }
             }
 
@@ -234,7 +251,7 @@ struct MenuContentView: View {
                 Button {
                     viewModel.startCalibration()
                 } label: {
-                    Text(viewModel.localized("Recalibrate", comment: "Button to restart calibration"))
+                    Label(viewModel.localized("Recalibrate", comment: "Button to restart calibration"), systemImage: "arrow.clockwise")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
@@ -242,7 +259,7 @@ struct MenuContentView: View {
                 Button {
                     viewModel.togglePause()
                 } label: {
-                    Text(viewModel.localized("Pause", comment: "Button to pause monitoring"))
+                    Label(viewModel.localized("Pause", comment: "Button to pause monitoring"), systemImage: "pause.fill")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.bordered)
@@ -277,6 +294,137 @@ struct MenuContentView: View {
         }
     }
 
+    private func statusCard(status: PostureStatus) -> some View {
+        let tint = statusTint(status)
+        return HStack(alignment: .top, spacing: 10) {
+            ZStack {
+                Circle().fill(tint.opacity(0.18))
+                Image(systemName: statusIcon(status))
+                    .foregroundStyle(tint)
+                    .font(.system(size: 15, weight: .semibold))
+            }
+            .frame(width: 32, height: 32)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(
+                    status == .bad
+                        ? viewModel.localized("Posture is bad", comment: "Status line when posture is bad")
+                        : viewModel.localized("Posture is good", comment: "Status line when posture is good")
+                )
+                .font(.headline)
+                Text(postureTip(status: status))
+                    .font(.caption)
+                    .foregroundStyle(tint)
+            }
+
+            Spacer(minLength: 4)
+
+            if let deviation = viewModel.currentDeviationDegrees {
+                VStack(alignment: .trailing, spacing: 2) {
+                    Text(viewModel.localized("Deviation", comment: "Small caption label above the live deviation number"))
+                        .font(.system(size: 9, weight: .semibold))
+                        .textCase(.uppercase)
+                        .foregroundStyle(.secondary)
+                    Text(verbatim: "\(Int(deviation.rounded()))°")
+                        .font(.title3)
+                        .fontWeight(.bold)
+                        .monospacedDigit()
+                        .foregroundStyle(tint)
+                }
+            }
+        }
+        .padding(12)
+        .background(tint.opacity(0.1), in: RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(tint.opacity(0.35)))
+    }
+
+    /// Direction-aware nudge: which way to tilt to get back toward baseline.
+    /// Sign convention is a best guess (not verified against real AirPods
+    /// hardware) — flip if it reads backwards once tested live.
+    private func postureTip(status: PostureStatus) -> String {
+        guard status != .good else {
+            return viewModel.localized("Looking good, keep it up", comment: "Tip shown under the status card when posture is good")
+        }
+        let signed = viewModel.currentSignedDeviationDegrees ?? 0
+        return signed >= 0
+            ? viewModel.localized("Tilt your head back slightly", comment: "Directional tip when the wearer has slouched forward past baseline")
+            : viewModel.localized("Tilt your head forward slightly", comment: "Directional tip when the wearer has leaned back past baseline")
+    }
+
+    private func headVisualizationCard(status: PostureStatus) -> some View {
+        let pitch = viewModel.currentSignedDeviationDegrees ?? 0
+        let yaw = viewModel.currentAttitude?.yawDegrees ?? 0
+        let roll = viewModel.currentAttitude?.rollDegrees ?? 0
+        let tint = statusTint(status)
+
+        return ZStack(alignment: .top) {
+            LinearGradient(
+                colors: [Color(red: 0.05, green: 0.07, blue: 0.13), Color(red: 0.09, green: 0.1, blue: 0.19)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            HeadVisualizationView(pitchDegrees: pitch, yawDegrees: yaw, rollDegrees: roll)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            VStack {
+                HStack(spacing: 6) {
+                    Circle().fill(Color.green).frame(width: 5, height: 5)
+                    Text(verbatim: "\(viewModel.localized("Live 3D Orientation", comment: "Label above the live 3D head model")) (\(orientationReadout(pitch: pitch, yaw: yaw, roll: roll)))")
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                    Spacer(minLength: 0)
+                }
+                .font(.system(size: 9))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(Color.black.opacity(0.35), in: Capsule())
+
+                Spacer(minLength: 0)
+
+                HStack(spacing: 10) {
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.blue).frame(width: 5, height: 5)
+                        Text(verbatim: "\(viewModel.localized("Neutral Plane", comment: "Label for the calibrated-baseline readout under the 3D head")) 0.0°")
+                    }
+                    Spacer(minLength: 0)
+                    HStack(spacing: 4) {
+                        Circle().fill(tint).frame(width: 5, height: 5)
+                        Text(verbatim: "\(viewModel.localized("Angle Deviation", comment: "Label for the live deviation readout under the 3D head")) \(signedDegreesString(pitch))°")
+                        if status != .good {
+                            Text(verbatim: "(\(viewModel.localized("Alert", comment: "Suffix shown next to the angle deviation readout when posture is drifting or bad")))")
+                                .foregroundStyle(tint)
+                        }
+                    }
+                }
+                .font(.system(size: 9))
+                .padding(.horizontal, 8)
+                .padding(.vertical, 5)
+                .background(Color.black.opacity(0.35), in: Capsule())
+            }
+            .padding(8)
+        }
+        .frame(height: 150)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.white.opacity(0.08)))
+    }
+
+    private func orientationReadout(pitch: Double, yaw: Double, roll: Double) -> String {
+        let pitchLabel = viewModel.localized("Pitch", comment: "Abbreviated axis label in the live 3D orientation readout")
+        let yawLabel = viewModel.localized("Yaw", comment: "Abbreviated axis label in the live 3D orientation readout")
+        let rollLabel = viewModel.localized("Roll", comment: "Abbreviated axis label in the live 3D orientation readout")
+        return "\(pitchLabel): \(signedDegreesString(pitch))° · \(yawLabel): \(signedDegreesString(yaw))° · \(rollLabel): \(signedDegreesString(roll))°"
+    }
+
+    private func signedDegreesString(_ value: Double) -> String {
+        let rounded = Int(value.rounded())
+        return rounded >= 0 ? "+\(rounded)" : "\(rounded)"
+    }
+
+    private var deviationMeterCap: Double {
+        viewModel.settings.sensitivity.thresholdDegrees * 1.3
+    }
+
     private func statusTint(_ status: PostureStatus) -> Color {
         switch status {
         case .good: return .green
@@ -307,10 +455,12 @@ struct MenuContentView: View {
             Text(verbatim: "English").tag(LanguagePreference.en)
             Text(verbatim: "Türkçe").tag(LanguagePreference.tr)
         } label: {
-            Image(systemName: "globe")
+            EmptyView()
         }
         .pickerStyle(.menu)
         .labelsHidden()
+        .font(.footnote)
+        .foregroundStyle(.secondary)
         .fixedSize()
     }
 

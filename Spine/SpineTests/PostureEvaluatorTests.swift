@@ -85,6 +85,17 @@ struct PostureEvaluatorTests {
         #expect(belowExit.status == .good)
     }
 
+    @Test func signedDeviationPreservesDirection() {
+        let evaluator = makeEvaluator(baseline: 0)
+        let forward = evaluator.evaluate(pitchDegrees: 20, timestamp: 0)
+        #expect(forward.deviationDegrees == 20)
+        #expect(forward.signedDeviationDegrees == 20)
+
+        let backward = evaluator.evaluate(pitchDegrees: -20, timestamp: 1)
+        #expect(backward.deviationDegrees == 20)
+        #expect(backward.signedDeviationDegrees == -20)
+    }
+
     @Test func newBadEpisodeAfterRecoveryCanNudgeOnceCooldownAllows() {
         let evaluator = makeEvaluator(cooldown: 5)
         evaluator.evaluate(pitchDegrees: 20, timestamp: 0)

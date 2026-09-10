@@ -18,10 +18,14 @@ Spine/Spine/
   Core/PostureEvaluator.swift      Pure Swift, no CoreMotion import. EMA smoothing, threshold, grace period, hysteresis, cooldown.
   Core/Calibrator.swift            Pure Swift. Mean + stddev over samples, rejects stddev > 3°.
   Services/HeadMotionService.swift CMHeadphoneMotionManager wrapper. First motion sample = "connected".
-  Services/AudioNudger.swift       AVSpeechSynthesizer. Random message pick, locale-based voice.
-  Services/SettingsStore.swift     UserDefaults: baseline, sensitivity, cooldown, voiceEnabled
+                                    Exposes pitch (posture) and full HeadAttitude (pitch/yaw/roll, cosmetic 3D only).
+  Services/AudioNudger.swift       AVSpeechSynthesizer. Random message pick, locale/gender-based voice.
+  Services/SettingsStore.swift     UserDefaults: baseline, sensitivity, cooldown, voiceEnabled, voiceGender, languagePreference
+  Services/LocalizedBundle.swift   Resolves the .lproj bundle for an explicit language override.
   UI/MenuContentView.swift         Menu content driven by AppState
   UI/CalibrationView.swift         Calibration flow UI
+  UI/HeadVisualizationView.swift   SceneKit NSViewRepresentable: procedural 3D head, no bundled asset,
+                                    tilts live with HeadAttitude.
 Spine/SpineTests/
   PostureEvaluatorTests.swift
   CalibratorTests.swift
@@ -32,7 +36,10 @@ timestamp, never `Date()` — so it's fully unit-testable without real AirPods.
 
 ## Rules
 
-- No third-party packages. Only SwiftUI, CoreMotion, AVFoundation, Foundation, Observation.
+- No third-party packages. Only first-party Apple frameworks: SwiftUI, AppKit, CoreMotion,
+  AVFoundation, SceneKit, Foundation, Observation.
+- The 3D head in `HeadVisualizationView` is built procedurally from SceneKit primitives —
+  never add a bundled/downloaded 3D asset file.
 - No network calls, analytics, or telemetry. All data stays on-device.
 - Code, comments, README, and commit messages in English.
 - User-facing and spoken strings are localized via String Catalog

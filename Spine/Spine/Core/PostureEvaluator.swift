@@ -26,7 +26,12 @@ enum PostureSensitivity: String, CaseIterable, Codable {
 /// Result of feeding one pitch sample into a `PostureEvaluator`.
 struct PostureEvaluation: Equatable {
     let status: PostureStatus
+    /// Unsigned magnitude, in degrees, used against the sensitivity threshold.
     let deviationDegrees: Double
+    /// Signed degrees from baseline (positive/negative preserved), for
+    /// direction-aware UI such as a "tilt back"/"tilt forward" hint or a
+    /// live 3D head tilt. Not used by the threshold/nudge logic above.
+    let signedDeviationDegrees: Double
     let shouldNudge: Bool
 }
 
@@ -76,7 +81,8 @@ final class PostureEvaluator {
         let smoothed = smoothedPitch.map { $0 + smoothingFactor * (pitchDegrees - $0) } ?? pitchDegrees
         smoothedPitch = smoothed
 
-        let deviation = abs(smoothed - baseline)
+        let signedDeviation = smoothed - baseline
+        let deviation = abs(signedDeviation)
         let threshold = sensitivity.thresholdDegrees
         let exitThreshold = threshold - hysteresisMargin
 
@@ -91,19 +97,19 @@ final class PostureEvaluator {
         }
 
         guard isOverThreshold, let since = overThresholdSince else {
-            return PostureEvaluation(status: .good, deviationDegrees: deviation, shouldNudge: false)
+            return PostureEvaluation(status: .good, deviationDegrees: deviation, signedDeviationDegrees: signedDeviation, shouldNudge: false)
         }
 
         guard timestamp - since >= gracePeriod else {
-            return PostureEvaluation(status: .drifting, deviationDegrees: deviation, shouldNudge: false)
+            return PostureEvaluation(status: .drifting, deviationDegrees: deviation, signedDeviationDegrees: signedDeviation, shouldNudge: false)
         }
 
         let cooldownElapsed = lastNudgeTimestamp.map { timestamp - $0 >= cooldown } ?? true
         guard cooldownElapsed else {
-            return PostureEvaluation(status: .bad, deviationDegrees: deviation, shouldNudge: false)
+            return PostureEvaluation(status: .bad, deviationDegrees: deviation, signedDeviationDegrees: signedDeviation, shouldNudge: false)
         }
 
         lastNudgeTimestamp = timestamp
-        return PostureEvaluation(status: .bad, deviationDegrees: deviation, shouldNudge: true)
+        return PostureEvaluation(status: .bad, deviationDegrees: deviation, signedDeviationDegrees: signedDeviation, shouldNudge: true)
     }
 }

@@ -35,6 +35,40 @@
         }
       }
     },
+    "Alert" : {
+      "comment" : "Suffix shown next to the angle deviation readout when posture is drifting or bad",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uyarı"
+          }
+        }
+      }
+    },
+    "Angle Deviation" : {
+      "comment" : "Label for the live deviation readout under the 3D head",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Angle Deviation"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Açı Sapması"
+          }
+        }
+      }
+    },
     "Automatic" : {
       "comment" : "Automatic voice gender option",
       "localizations" : {
@@ -154,6 +188,23 @@
         }
       }
     },
+    "Deviation" : {
+      "comment" : "Small caption label above the live deviation number",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deviation"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sapma"
+          }
+        }
+      }
+    },
     "Deviation:" : {
       "comment" : "Label prefix for the live posture deviation reading",
       "localizations" : {
@@ -184,6 +235,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kadın"
+          }
+        }
+      }
+    },
+    "Headphone Posture Tracker" : {
+      "comment" : "App subtitle shown under the app name",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Headphone Posture Tracker"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kulaklıkla Postür Takibi"
           }
         }
       }
@@ -222,6 +290,40 @@
         }
       }
     },
+    "Live 3D Orientation" : {
+      "comment" : "Label above the live 3D head model",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live 3D Orientation"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Canlı 3D Yönelim"
+          }
+        }
+      }
+    },
+    "Looking good, keep it up" : {
+      "comment" : "Tip shown under the status card when posture is good",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Looking good, keep it up"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harika görünüyor, böyle devam"
+          }
+        }
+      }
+    },
     "Low" : {
       "comment" : "Low sensitivity option",
       "localizations" : {
@@ -256,6 +358,23 @@
         }
       }
     },
+    "Max" : {
+      "comment" : "Label for the top end of the deviation scale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Max"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maks"
+          }
+        }
+      }
+    },
     "Medium" : {
       "comment" : "Medium sensitivity option",
       "localizations" : {
@@ -269,6 +388,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Orta"
+          }
+        }
+      }
+    },
+    "Neutral" : {
+      "comment" : "Label for the zero/baseline end of the deviation scale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nötr"
+          }
+        }
+      }
+    },
+    "Neutral Plane" : {
+      "comment" : "Label for the calibrated-baseline readout under the 3D head",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neutral Plane"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nötr Düzlem"
           }
         }
       }
@@ -303,6 +456,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Duraklatıldı"
+          }
+        }
+      }
+    },
+    "Pitch" : {
+      "comment" : "Abbreviated axis label in the live 3D orientation readout",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pitch"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eğim"
           }
         }
       }
@@ -388,6 +558,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Devam et"
+          }
+        }
+      }
+    },
+    "Roll" : {
+      "comment" : "Abbreviated axis label in the live 3D orientation readout",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roll"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yatış"
           }
         }
       }
@@ -515,6 +702,40 @@
         }
       }
     },
+    "Tilt your head back slightly" : {
+      "comment" : "Directional tip when the wearer has slouched forward past baseline",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tilt your head back slightly"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başını hafifçe geriye eğ"
+          }
+        }
+      }
+    },
+    "Tilt your head forward slightly" : {
+      "comment" : "Directional tip when the wearer has leaned back past baseline",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tilt your head forward slightly"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başını hafifçe öne eğ"
+          }
+        }
+      }
+    },
     "Voice" : {
       "comment" : "Voice gender picker label",
       "localizations" : {
@@ -545,6 +766,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sesli uyarı"
+          }
+        }
+      }
+    },
+    "Yaw" : {
+      "comment" : "Abbreviated axis label in the live 3D orientation readout",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yaw"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sapma Açısı"
           }
         }
       }

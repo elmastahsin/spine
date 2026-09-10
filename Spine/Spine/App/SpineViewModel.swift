@@ -13,6 +13,13 @@ final class SpineViewModel {
     private(set) var state: AppState = .waitingForAirPods
     private(set) var calibrationFeedback: CalibrationFeedback?
     private(set) var currentDeviationDegrees: Double?
+    /// Signed degrees from baseline; positive means pitched further into
+    /// the "slouch" direction. Drives the live 3D head tilt and the
+    /// direction-aware posture tip, in addition to `currentDeviationDegrees`.
+    private(set) var currentSignedDeviationDegrees: Double?
+    /// Latest raw head attitude, for the live 3D head visualization only —
+    /// posture detection itself only ever uses pitch (see `handlePitch`).
+    private(set) var currentAttitude: HeadAttitude?
 
     let settings: SettingsStore
 
@@ -52,6 +59,12 @@ final class SpineViewModel {
         String(localized: key, bundle: LocalizedBundle.resolve(for: locale), locale: locale, comment: comment)
     }
 
+    /// "1.0" style marketing version from the app bundle, for the version
+    /// badge next to the app name.
+    var appVersion: String? {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+
     init(
         settings: SettingsStore = SettingsStore(),
         motionService: HeadMotionService = HeadMotionService(),
@@ -66,6 +79,9 @@ final class SpineViewModel {
         }
         motionService.onPitchUpdate = { [weak self] pitch, timestamp in
             self?.handlePitch(pitch, timestamp: timestamp)
+        }
+        motionService.onAttitudeUpdate = { [weak self] attitude, _ in
+            self?.currentAttitude = attitude
         }
 
         motionService.start()
@@ -89,6 +105,8 @@ final class SpineViewModel {
             calibrator = nil
             evaluator = nil
             currentDeviationDegrees = nil
+            currentSignedDeviationDegrees = nil
+            currentAttitude = nil
             state = .waitingForAirPods
         }
     }
@@ -105,6 +123,7 @@ final class SpineViewModel {
 
         let evaluation = evaluator.evaluate(pitchDegrees: pitchDegrees, timestamp: timestamp)
         currentDeviationDegrees = evaluation.deviationDegrees
+        currentSignedDeviationDegrees = evaluation.signedDeviationDegrees
         state = .monitoring(evaluation.status)
 
         if evaluation.shouldNudge, settings.voiceEnabled {
