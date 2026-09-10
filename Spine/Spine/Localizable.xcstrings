@@ -18,23 +18,6 @@
         }
       }
     },
-    "AirPods · Motion Active" : {
-      "comment" : "Status badge shown when AirPods head motion tracking is active",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AirPods · Motion Active"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "AirPods · Hareket Aktif"
-          }
-        }
-      }
-    },
     "Alert" : {
       "comment" : "Suffix shown next to the angle deviation readout when posture is drifting or bad",
       "localizations" : {
@@ -201,23 +184,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sapma"
-          }
-        }
-      }
-    },
-    "Deviation:" : {
-      "comment" : "Label prefix for the live posture deviation reading",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deviation:"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sapma:"
           }
         }
       }
