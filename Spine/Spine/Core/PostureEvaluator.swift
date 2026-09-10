@@ -44,9 +44,9 @@ struct PostureEvaluation: Equatable {
 ///   rather than a single one-off nudge or a flood of them.
 final class PostureEvaluator {
     let baseline: Double
-    let sensitivity: PostureSensitivity
+    var sensitivity: PostureSensitivity
     let gracePeriod: TimeInterval
-    let cooldown: TimeInterval
+    var cooldown: TimeInterval
     let hysteresisMargin: Double
     let smoothingFactor: Double
 

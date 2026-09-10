@@ -13,9 +13,15 @@ final class HeadMotionService: NSObject {
         case connected
     }
 
-    private(set) var connectionState: ConnectionState = .disconnected
+    private(set) var connectionState: ConnectionState = .disconnected {
+        didSet {
+            guard oldValue != connectionState else { return }
+            onConnectionChange?(connectionState)
+        }
+    }
     private(set) var latestPitchDegrees: Double?
 
+    var onConnectionChange: ((ConnectionState) -> Void)?
     var onPitchUpdate: ((_ pitchDegrees: Double, _ timestamp: TimeInterval) -> Void)?
 
     private let motionManager: CMHeadphoneMotionManager
