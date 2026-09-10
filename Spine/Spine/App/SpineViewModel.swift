@@ -42,6 +42,16 @@ final class SpineViewModel {
         return 1
     }
 
+    /// The locale the UI and spoken alerts should use, per the user's
+    /// language preference (independent of the Mac's system language).
+    var locale: Locale {
+        settings.languagePreference.locale
+    }
+
+    func localized(_ key: String.LocalizationValue, comment: StaticString = "") -> String {
+        String(localized: key, locale: locale, comment: comment)
+    }
+
     init(
         settings: SettingsStore = SettingsStore(),
         motionService: HeadMotionService = HeadMotionService(),
@@ -98,7 +108,7 @@ final class SpineViewModel {
         state = .monitoring(evaluation.status)
 
         if evaluation.shouldNudge, settings.voiceEnabled {
-            audioNudger.nudge()
+            audioNudger.nudge(locale: locale)
         }
     }
 
@@ -113,7 +123,10 @@ final class SpineViewModel {
         calibrationElapsed = 0
         state = .calibrating(progress: 0)
 
-        audioNudger.speak(String(localized: "Sit up straight and look at the screen.", comment: "Spoken prompt at the start of calibration"))
+        audioNudger.speak(
+            localized("Sit up straight and look at the screen.", comment: "Spoken prompt at the start of calibration"),
+            locale: locale
+        )
 
         calibrationTimer = Timer.scheduledTimer(withTimeInterval: calibrationTickInterval, repeats: true) { [weak self] _ in
             self?.tickCalibration()
@@ -141,11 +154,17 @@ final class SpineViewModel {
             evaluator = PostureEvaluator(baseline: baseline, sensitivity: settings.sensitivity, cooldown: settings.cooldown)
             calibrationFeedback = nil
             state = .monitoring(.good)
-            audioNudger.speak(String(localized: "Calibration complete.", comment: "Spoken message on successful calibration"))
+            audioNudger.speak(
+                localized("Calibration complete.", comment: "Spoken message on successful calibration"),
+                locale: locale
+            )
         case .failure:
             calibrationFeedback = .tooMuchMovement
             state = .needsCalibration
-            audioNudger.speak(String(localized: "You moved too much. Try again.", comment: "Spoken message when calibration is rejected"))
+            audioNudger.speak(
+                localized("You moved too much. Try again.", comment: "Spoken message when calibration is rejected"),
+                locale: locale
+            )
         }
     }
 
@@ -163,6 +182,10 @@ final class SpineViewModel {
 
     func setVoiceEnabled(_ enabled: Bool) {
         settings.voiceEnabled = enabled
+    }
+
+    func updateLanguagePreference(_ preference: LanguagePreference) {
+        settings.languagePreference = preference
     }
 
     // MARK: - Pause

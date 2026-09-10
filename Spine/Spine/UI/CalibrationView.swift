@@ -2,6 +2,8 @@ import SwiftUI
 
 /// Shown while `SpineViewModel` is running its 3-second calibration countdown.
 struct CalibrationView: View {
+    @Environment(SpineViewModel.self) private var viewModel
+
     let progress: Double
 
     var body: some View {
@@ -22,9 +24,9 @@ struct CalibrationView: View {
             .frame(width: 64, height: 64)
 
             VStack(spacing: 4) {
-                Text(String(localized: "Calibrating…", comment: "Calibration in-progress title"))
+                Text(viewModel.localized("Calibrating…", comment: "Calibration in-progress title"))
                     .font(.headline)
-                Text(String(localized: "Sit up straight and look at the screen.", comment: "Calibration in-progress instruction"))
+                Text(viewModel.localized("Sit up straight and look at the screen.", comment: "Calibration in-progress instruction"))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

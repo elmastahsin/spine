@@ -290,6 +290,23 @@
         }
       }
     },
+    "System" : {
+      "comment" : "Language option: follow the system language",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sistem"
+          }
+        }
+      }
+    },
     "Resume" : {
       "comment" : "Button to resume monitoring",
       "localizations" : {

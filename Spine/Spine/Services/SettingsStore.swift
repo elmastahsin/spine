@@ -1,6 +1,22 @@
 import Foundation
 import Observation
 
+/// Overrides which language the UI and spoken alerts use, independent of
+/// the Mac's system language.
+enum LanguagePreference: String, CaseIterable, Codable {
+    case system
+    case en
+    case tr
+
+    var locale: Locale {
+        switch self {
+        case .system: return Locale.current
+        case .en: return Locale(identifier: "en")
+        case .tr: return Locale(identifier: "tr")
+        }
+    }
+}
+
 /// UserDefaults-backed persistence for calibration baseline and user prefs.
 @Observable
 final class SettingsStore {
@@ -11,6 +27,7 @@ final class SettingsStore {
         static let sensitivity = "settings.sensitivity"
         static let cooldown = "settings.cooldown"
         static let voiceEnabled = "settings.voiceEnabled"
+        static let languagePreference = "settings.languagePreference"
     }
 
     private let defaults: UserDefaults
@@ -37,6 +54,10 @@ final class SettingsStore {
         didSet { defaults.set(voiceEnabled, forKey: Keys.voiceEnabled) }
     }
 
+    var languagePreference: LanguagePreference {
+        didSet { defaults.set(languagePreference.rawValue, forKey: Keys.languagePreference) }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
@@ -57,5 +78,12 @@ final class SettingsStore {
         voiceEnabled = defaults.object(forKey: Keys.voiceEnabled) != nil
             ? defaults.bool(forKey: Keys.voiceEnabled)
             : true
+
+        if let rawLanguage = defaults.string(forKey: Keys.languagePreference),
+           let storedLanguage = LanguagePreference(rawValue: rawLanguage) {
+            languagePreference = storedLanguage
+        } else {
+            languagePreference = .system
+        }
     }
 }
