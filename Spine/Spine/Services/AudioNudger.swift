@@ -34,9 +34,20 @@ final class AudioNudger {
         return true
     }
 
+    /// Picks the highest-quality installed voice for the locale.
+    /// `AVSpeechSynthesisVoice(language:)` alone returns the default
+    /// (usually the lowest-quality "compact") voice; Enhanced/Premium voices
+    /// exist per language but only get used if selected explicitly here —
+    /// and only if the user has downloaded one via System Settings >
+    /// Accessibility > Spoken Content > System Voice.
     private func voice(for locale: Locale) -> AVSpeechSynthesisVoice? {
         let languageCode = locale.language.languageCode?.identifier ?? "en"
         let bcp47 = languageCode == "tr" ? "tr-TR" : "en-US"
+
+        let installed = AVSpeechSynthesisVoice.speechVoices().filter { $0.language == bcp47 }
+        if let best = installed.max(by: { $0.quality.rawValue < $1.quality.rawValue }) {
+            return best
+        }
         return AVSpeechSynthesisVoice(language: bcp47)
     }
 
