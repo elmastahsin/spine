@@ -9,8 +9,12 @@ xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -configuration Debug bui
 ## Test
 
 ```
-xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test
+xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test -only-testing:SpineTests
 ```
+
+`-only-testing:SpineTests` scopes to the Core-layer unit tests. The Xcode-generated
+`SpineUITests` target assumes a normal windowed app and is unreliable against an
+`LSUIElement` menu-bar-only app.
 
 ## Guidelines
 

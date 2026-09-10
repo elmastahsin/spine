@@ -18,6 +18,23 @@
         }
       }
     },
+    "Calibrating…" : {
+      "comment" : "Calibration in-progress title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrating…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalibre ediliyor…"
+          }
+        }
+      }
+    },
     "Calibration complete." : {
       "comment" : "Spoken message on successful calibration",
       "localizations" : {
@@ -48,23 +65,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kalibrasyon gerekli"
-          }
-        }
-      }
-    },
-    "Calibrating…" : {
-      "comment" : "Calibration in-progress title",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Calibrating…"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kalibre ediliyor…"
           }
         }
       }
@@ -324,6 +324,23 @@
         }
       }
     },
+    "s" : {
+      "comment" : "Abbreviation for seconds, shown after a cooldown number",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "s"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sn"
+          }
+        }
+      }
+    },
     "Sensitivity" : {
       "comment" : "Sensitivity picker label",
       "localizations" : {
@@ -359,7 +376,7 @@
       }
     },
     "Sit up straight and look at the screen." : {
-      "comment" : "Spoken prompt at the start of calibration",
+      "comment" : "Calibration in-progress instruction\nSpoken prompt at the start of calibration",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -410,7 +427,7 @@
       }
     },
     "You moved too much. Try again." : {
-      "comment" : "Shown after a rejected calibration attempt / spoken message when calibration is rejected",
+      "comment" : "Shown after a rejected calibration attempt\nSpoken message when calibration is rejected",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -442,24 +459,7 @@
           }
         }
       }
-    },
-    "s" : {
-      "comment" : "Abbreviation for seconds, shown after a cooldown number",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "s"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sn"
-          }
-        }
-      }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }

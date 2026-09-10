@@ -44,7 +44,10 @@ timestamp, never `Date()` — so it's fully unit-testable without real AirPods.
 
 ```
 xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -configuration Debug build
-xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test
+xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test -only-testing:SpineTests
 ```
 
-Run the build after every phase of work before moving on.
+Run the build after every phase of work before moving on. `-only-testing:SpineTests` scopes to the
+Core-layer unit tests; the Xcode-generated `SpineUITests` target assumes a normal windowed app and
+is unreliable against an `LSUIElement` menu-bar-only app (no main window to launch/terminate
+against), so it's not part of the required gate.

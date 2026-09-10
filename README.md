@@ -25,7 +25,7 @@ Run the test suite (covers the posture-evaluation and calibration logic,
 no AirPods required):
 
 ```
-xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test
+xcodebuild -project Spine/Spine.xcodeproj -scheme Spine -destination 'platform=macOS' test -only-testing:SpineTests
 ```
 
 ## Privacy
