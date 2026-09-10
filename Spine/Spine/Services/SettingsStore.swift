@@ -17,6 +17,15 @@ enum LanguagePreference: String, CaseIterable, Codable {
     }
 }
 
+/// Which voice gender to prefer when multiple voices are installed for a
+/// language. `.automatic` picks the highest-quality voice regardless of
+/// gender.
+enum VoiceGenderPreference: String, CaseIterable, Codable {
+    case automatic
+    case female
+    case male
+}
+
 /// UserDefaults-backed persistence for calibration baseline and user prefs.
 @Observable
 final class SettingsStore {
@@ -28,6 +37,7 @@ final class SettingsStore {
         static let cooldown = "settings.cooldown"
         static let voiceEnabled = "settings.voiceEnabled"
         static let languagePreference = "settings.languagePreference"
+        static let voiceGender = "settings.voiceGender"
     }
 
     private let defaults: UserDefaults
@@ -58,6 +68,10 @@ final class SettingsStore {
         didSet { defaults.set(languagePreference.rawValue, forKey: Keys.languagePreference) }
     }
 
+    var voiceGender: VoiceGenderPreference {
+        didSet { defaults.set(voiceGender.rawValue, forKey: Keys.voiceGender) }
+    }
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
 
@@ -84,6 +98,13 @@ final class SettingsStore {
             languagePreference = storedLanguage
         } else {
             languagePreference = .system
+        }
+
+        if let rawGender = defaults.string(forKey: Keys.voiceGender),
+           let storedGender = VoiceGenderPreference(rawValue: rawGender) {
+            voiceGender = storedGender
+        } else {
+            voiceGender = .automatic
         }
     }
 }

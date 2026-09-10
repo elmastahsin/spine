@@ -150,6 +150,15 @@ struct MenuContentView: View {
                 .pickerStyle(.menu)
 
                 Toggle(viewModel.localized("Voice alerts", comment: "Voice alerts toggle label"), isOn: voiceEnabledBinding)
+
+                if viewModel.settings.voiceEnabled {
+                    Picker(viewModel.localized("Voice", comment: "Voice gender picker label"), selection: voiceGenderBinding) {
+                        Text(viewModel.localized("Automatic", comment: "Automatic voice gender option")).tag(VoiceGenderPreference.automatic)
+                        Text(viewModel.localized("Female", comment: "Female voice gender option")).tag(VoiceGenderPreference.female)
+                        Text(viewModel.localized("Male", comment: "Male voice gender option")).tag(VoiceGenderPreference.male)
+                    }
+                    .pickerStyle(.menu)
+                }
             }
             .padding(10)
             .background(Color.primary.opacity(0.04), in: RoundedRectangle(cornerRadius: 8))
@@ -248,6 +257,13 @@ struct MenuContentView: View {
         Binding(
             get: { viewModel.settings.voiceEnabled },
             set: { viewModel.setVoiceEnabled($0) }
+        )
+    }
+
+    private var voiceGenderBinding: Binding<VoiceGenderPreference> {
+        Binding(
+            get: { viewModel.settings.voiceGender },
+            set: { viewModel.updateVoiceGender($0) }
         )
     }
 

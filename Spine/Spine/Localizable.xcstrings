@@ -1,6 +1,23 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Automatic" : {
+      "comment" : "Automatic voice gender option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otomatik"
+          }
+        }
+      }
+    },
     "Calibrate" : {
       "comment" : "Button to start calibration",
       "localizations" : {
@@ -120,6 +137,23 @@
         }
       }
     },
+    "Female" : {
+      "comment" : "Female voice gender option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Female"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kadın"
+          }
+        }
+      }
+    },
     "High" : {
       "comment" : "High sensitivity option",
       "localizations" : {
@@ -167,6 +201,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Düşük"
+          }
+        }
+      }
+    },
+    "Male" : {
+      "comment" : "Male voice gender option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Male"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erkek"
           }
         }
       }
@@ -324,23 +375,6 @@
         }
       }
     },
-    "s" : {
-      "comment" : "Abbreviation for seconds, shown after a cooldown number",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "s"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "sn"
-          }
-        }
-      }
-    },
     "Sensitivity" : {
       "comment" : "Sensitivity picker label",
       "localizations" : {
@@ -430,6 +464,23 @@
         }
       }
     },
+    "Voice" : {
+      "comment" : "Voice gender picker label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voice"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ses"
+          }
+        }
+      }
+    },
     "Voice alerts" : {
       "comment" : "Voice alerts toggle label",
       "localizations" : {
@@ -477,6 +528,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ekrana gömüldün, dikleş"
+          }
+        }
+      }
+    },
+    "s" : {
+      "comment" : "Abbreviation for seconds, shown after a cooldown number",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "s"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sn"
           }
         }
       }

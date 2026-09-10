@@ -108,7 +108,7 @@ final class SpineViewModel {
         state = .monitoring(evaluation.status)
 
         if evaluation.shouldNudge, settings.voiceEnabled {
-            audioNudger.nudge(locale: locale)
+            audioNudger.nudge(locale: locale, genderPreference: settings.voiceGender)
         }
     }
 
@@ -125,7 +125,8 @@ final class SpineViewModel {
 
         audioNudger.speak(
             localized("Sit up straight and look at the screen.", comment: "Spoken prompt at the start of calibration"),
-            locale: locale
+            locale: locale,
+            genderPreference: settings.voiceGender
         )
 
         calibrationTimer = Timer.scheduledTimer(withTimeInterval: calibrationTickInterval, repeats: true) { [weak self] _ in
@@ -156,14 +157,16 @@ final class SpineViewModel {
             state = .monitoring(.good)
             audioNudger.speak(
                 localized("Calibration complete.", comment: "Spoken message on successful calibration"),
-                locale: locale
+                locale: locale,
+                genderPreference: settings.voiceGender
             )
         case .failure:
             calibrationFeedback = .tooMuchMovement
             state = .needsCalibration
             audioNudger.speak(
                 localized("You moved too much. Try again.", comment: "Spoken message when calibration is rejected"),
-                locale: locale
+                locale: locale,
+                genderPreference: settings.voiceGender
             )
         }
     }
@@ -186,6 +189,10 @@ final class SpineViewModel {
 
     func updateLanguagePreference(_ preference: LanguagePreference) {
         settings.languagePreference = preference
+    }
+
+    func updateVoiceGender(_ preference: VoiceGenderPreference) {
+        settings.voiceGender = preference
     }
 
     // MARK: - Pause
