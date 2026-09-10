@@ -49,7 +49,7 @@ final class SpineViewModel {
     }
 
     func localized(_ key: String.LocalizationValue, comment: StaticString = "") -> String {
-        String(localized: key, locale: locale, comment: comment)
+        String(localized: key, bundle: LocalizedBundle.resolve(for: locale), locale: locale, comment: comment)
     }
 
     init(

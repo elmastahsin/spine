@@ -41,11 +41,12 @@ final class AudioNudger {
     }
 
     static func nudgeMessages(locale: Locale) -> [String] {
-        [
-            String(localized: "Sit up straight", locale: locale, comment: "Spoken posture nudge"),
-            String(localized: "Roll your shoulders back", locale: locale, comment: "Spoken posture nudge"),
-            String(localized: "Lift your head", locale: locale, comment: "Spoken posture nudge"),
-            String(localized: "You're sinking into the screen", locale: locale, comment: "Spoken posture nudge"),
+        let bundle = LocalizedBundle.resolve(for: locale)
+        return [
+            String(localized: "Sit up straight", bundle: bundle, locale: locale, comment: "Spoken posture nudge"),
+            String(localized: "Roll your shoulders back", bundle: bundle, locale: locale, comment: "Spoken posture nudge"),
+            String(localized: "Lift your head", bundle: bundle, locale: locale, comment: "Spoken posture nudge"),
+            String(localized: "You're sinking into the screen", bundle: bundle, locale: locale, comment: "Spoken posture nudge"),
         ]
     }
 }
