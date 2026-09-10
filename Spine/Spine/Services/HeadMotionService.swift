@@ -2,15 +2,6 @@ import CoreMotion
 import Foundation
 import Observation
 
-/// Full head orientation in degrees, for the live 3D head visualization.
-/// Posture detection only ever uses `pitchDegrees` (via `onPitchUpdate`);
-/// yaw/roll exist purely for the cosmetic 3D display.
-struct HeadAttitude: Equatable {
-    let pitchDegrees: Double
-    let yawDegrees: Double
-    let rollDegrees: Double
-}
-
 /// Wraps `CMHeadphoneMotionManager`, exposing connection state and a pitch
 /// stream. The CMHeadphoneMotionManagerDelegate connect/disconnect callbacks
 /// aren't always delivered promptly (or at all) on macOS, so this service
@@ -32,7 +23,6 @@ final class HeadMotionService: NSObject {
 
     var onConnectionChange: ((ConnectionState) -> Void)?
     var onPitchUpdate: ((_ pitchDegrees: Double, _ timestamp: TimeInterval) -> Void)?
-    var onAttitudeUpdate: ((_ attitude: HeadAttitude, _ timestamp: TimeInterval) -> Void)?
 
     private let motionManager: CMHeadphoneMotionManager
 
@@ -55,14 +45,9 @@ final class HeadMotionService: NSObject {
                 self.connectionState = .connected
             }
 
-            let attitude = HeadAttitude(
-                pitchDegrees: motion.attitude.pitch * 180 / .pi,
-                yawDegrees: motion.attitude.yaw * 180 / .pi,
-                rollDegrees: motion.attitude.roll * 180 / .pi
-            )
-            self.latestPitchDegrees = attitude.pitchDegrees
-            self.onPitchUpdate?(attitude.pitchDegrees, motion.timestamp)
-            self.onAttitudeUpdate?(attitude, motion.timestamp)
+            let pitchDegrees = motion.attitude.pitch * 180 / .pi
+            self.latestPitchDegrees = pitchDegrees
+            self.onPitchUpdate?(pitchDegrees, motion.timestamp)
         }
     }
 

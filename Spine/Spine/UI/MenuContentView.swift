@@ -195,8 +195,6 @@ struct MenuContentView: View {
         VStack(alignment: .leading, spacing: 12) {
             statusCard(status: status)
 
-            headVisualizationCard(status: status)
-
             if let deviation = viewModel.currentDeviationDegrees {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
@@ -349,76 +347,6 @@ struct MenuContentView: View {
         return signed >= 0
             ? viewModel.localized("Tilt your head back slightly", comment: "Directional tip when the wearer has slouched forward past baseline")
             : viewModel.localized("Tilt your head forward slightly", comment: "Directional tip when the wearer has leaned back past baseline")
-    }
-
-    private func headVisualizationCard(status: PostureStatus) -> some View {
-        let pitch = viewModel.currentSignedDeviationDegrees ?? 0
-        let yaw = viewModel.currentAttitude?.yawDegrees ?? 0
-        let roll = viewModel.currentAttitude?.rollDegrees ?? 0
-        let tint = statusTint(status)
-
-        return ZStack(alignment: .top) {
-            LinearGradient(
-                colors: [Color(red: 0.05, green: 0.07, blue: 0.13), Color(red: 0.09, green: 0.1, blue: 0.19)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-
-            HeadVisualizationView(pitchDegrees: pitch, yawDegrees: yaw, rollDegrees: roll)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            VStack {
-                HStack(spacing: 6) {
-                    Circle().fill(Color.green).frame(width: 5, height: 5)
-                    Text(verbatim: "\(viewModel.localized("Live 3D Orientation", comment: "Label above the live 3D head model")) (\(orientationReadout(pitch: pitch, yaw: yaw, roll: roll)))")
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.8)
-                    Spacer(minLength: 0)
-                }
-                .font(.system(size: 9))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(Color.black.opacity(0.35), in: Capsule())
-
-                Spacer(minLength: 0)
-
-                HStack(spacing: 10) {
-                    HStack(spacing: 4) {
-                        Circle().fill(Color.blue).frame(width: 5, height: 5)
-                        Text(verbatim: "\(viewModel.localized("Neutral Plane", comment: "Label for the calibrated-baseline readout under the 3D head")) 0.0°")
-                    }
-                    Spacer(minLength: 0)
-                    HStack(spacing: 4) {
-                        Circle().fill(tint).frame(width: 5, height: 5)
-                        Text(verbatim: "\(viewModel.localized("Angle Deviation", comment: "Label for the live deviation readout under the 3D head")) \(signedDegreesString(pitch))°")
-                        if status != .good {
-                            Text(verbatim: "(\(viewModel.localized("Alert", comment: "Suffix shown next to the angle deviation readout when posture is drifting or bad")))")
-                                .foregroundStyle(tint)
-                        }
-                    }
-                }
-                .font(.system(size: 9))
-                .padding(.horizontal, 8)
-                .padding(.vertical, 5)
-                .background(Color.black.opacity(0.35), in: Capsule())
-            }
-            .padding(8)
-        }
-        .frame(height: 150)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .overlay(RoundedRectangle(cornerRadius: 12).strokeBorder(Color.white.opacity(0.08)))
-    }
-
-    private func orientationReadout(pitch: Double, yaw: Double, roll: Double) -> String {
-        let pitchLabel = viewModel.localized("Pitch", comment: "Abbreviated axis label in the live 3D orientation readout")
-        let yawLabel = viewModel.localized("Yaw", comment: "Abbreviated axis label in the live 3D orientation readout")
-        let rollLabel = viewModel.localized("Roll", comment: "Abbreviated axis label in the live 3D orientation readout")
-        return "\(pitchLabel): \(signedDegreesString(pitch))° · \(yawLabel): \(signedDegreesString(yaw))° · \(rollLabel): \(signedDegreesString(roll))°"
-    }
-
-    private func signedDegreesString(_ value: Double) -> String {
-        let rounded = Int(value.rounded())
-        return rounded >= 0 ? "+\(rounded)" : "\(rounded)"
     }
 
     private var deviationMeterCap: Double {
