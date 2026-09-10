@@ -29,9 +29,22 @@
 		9C47A0AE3052B07400C4331E /* SpineUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SpineUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		9C47A0E03052C57800C4331E /* Exceptions for "Spine" folder in "Spine" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 9C47A0943052B07300C4331E /* Spine */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9C47A0973052B07300C4331E /* Spine */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				9C47A0E03052C57800C4331E /* Exceptions for "Spine" folder in "Spine" target */,
+			);
 			path = Spine;
 			sourceTree = "<group>";
 		};
@@ -403,13 +416,15 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Spine/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMotionUsageDescription = "";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Spine uses AirPods motion data to track posture";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tahsinelmas..Spine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -437,13 +452,15 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Spine/Info.plist;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMotionUsageDescription = "";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Spine uses AirPods motion data to track posture";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 14.6;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tahsinelmas..Spine;
 				PRODUCT_NAME = "$(TARGET_NAME)";
