@@ -13,6 +13,26 @@ dependencies, and no data ever leaves your Mac.
   Max, or AirPods (3rd generation) or later. Older AirPods models don't
   expose motion data and won't work with Spine.
 
+## Install
+
+Via Homebrew:
+
+```
+brew tap elmastahsin/tap
+brew install --cask spine
+```
+
+The release build is ad-hoc signed, not notarized by Apple, so macOS will
+refuse to open it on first launch. Either right-click `Spine.app` in Finder
+and choose **Open**, or run:
+
+```
+xattr -cr /Applications/Spine.app
+```
+
+Prebuilt `.app` archives are also available on the
+[releases page](https://github.com/elmastahsin/spine/releases).
+
 ## Build
 
 Open `Spine/Spine.xcodeproj` in Xcode and run, or build from the command line:
