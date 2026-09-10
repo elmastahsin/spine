@@ -14,6 +14,13 @@ import SwiftUI
 /// Sign/axis mapping here is a best-effort guess (no physical AirPods were
 /// available to verify against real hardware) — flip `pitchSign` below if
 /// the model tilts opposite to the real motion once tested.
+///
+/// The head shape is three overlapping ellipsoids (cranium, jaw, chin)
+/// rather than a single sphere or a hand-tuned lathe profile: a lathe
+/// silhouette is very sensitive to its control points and previously came
+/// out looking like a lightbulb, while stacked ellipsoids stay predictably
+/// round at every size and still read as a head once the jaw narrows
+/// below the cranium.
 struct HeadVisualizationView: NSViewRepresentable {
     var pitchDegrees: Double
     var yawDegrees: Double
@@ -52,85 +59,23 @@ struct HeadVisualizationView: NSViewRepresentable {
         return material
     }
 
-    // MARK: - Head silhouette
+    // MARK: - Ellipsoid surface math
 
-    /// Radius (before the node's xz scale is applied) at each sampled
-    /// height, from crown (y = 1) to chin (y = -1). Revolving this around
-    /// the Y axis is what actually gives the model a jaw and a chin instead
-    /// of the plain scaled sphere the first version used.
-    private static let headProfile: [(y: Double, r: Double)] = [
-        (1.00, 0.00),
-        (0.90, 0.30),
-        (0.75, 0.48),
-        (0.55, 0.56),
-        (0.35, 0.57),
-        (0.15, 0.54),
-        (-0.05, 0.48),
-        (-0.25, 0.40),
-        (-0.45, 0.30),
-        (-0.65, 0.20),
-        (-0.85, 0.10),
-        (-1.00, 0.00),
-    ]
-
-    /// Linear interpolation of `headProfile`, used to place facial features
-    /// flush against the actual silhouette instead of guessing coordinates
-    /// that risk floating off the surface or clipping into it.
-    private static func profileRadius(atY y: Double) -> Double {
-        let points = headProfile
-        for i in 0..<(points.count - 1) {
-            let (y0, r0) = points[i]
-            let (y1, r1) = points[i + 1]
-            if y <= y0 && y >= y1 {
-                let t = (y0 - y) / (y0 - y1)
-                return r0 + t * (r1 - r0)
-            }
-        }
-        return points.last?.r ?? 0
+    /// A sphere's base radius plus a non-uniform scale, both in the same
+    /// local space as the nodes built from it. Lets facial features be
+    /// placed by sampling the actual surface instead of guessing
+    /// coordinates that risk floating or clipping.
+    private struct Ellipsoid {
+        let center: SCNVector3
+        let radius: Double
+        let scale: SCNVector3
     }
 
-    /// Builds a lathe (surface of revolution) mesh from `headProfile`,
-    /// smooth-shaded, with degenerate-but-valid triangle fans at the crown
-    /// and chin poles.
-    private static func makeHeadGeometry(material: SCNMaterial, radialSegments: Int = 40) -> SCNGeometry {
-        let profile = headProfile
-        var vertices: [SCNVector3] = []
-        var normals: [SCNVector3] = []
-
-        for (y, r) in profile {
-            for seg in 0..<radialSegments {
-                let theta = Double(seg) / Double(radialSegments) * 2 * .pi
-                let x = r * cos(theta)
-                let z = r * sin(theta)
-                vertices.append(SCNVector3(CGFloat(x), CGFloat(y), CGFloat(z)))
-                let len = (x * x + z * z).squareRoot()
-                if len > 0.0001 {
-                    normals.append(SCNVector3(CGFloat(x / len), 0, CGFloat(z / len)))
-                } else {
-                    normals.append(SCNVector3(0, y > 0 ? 1 : -1, 0))
-                }
-            }
-        }
-
-        var indices: [Int32] = []
-        for ring in 0..<(profile.count - 1) {
-            for seg in 0..<radialSegments {
-                let next = (seg + 1) % radialSegments
-                let a = Int32(ring * radialSegments + seg)
-                let b = Int32(ring * radialSegments + next)
-                let c = Int32((ring + 1) * radialSegments + seg)
-                let d = Int32((ring + 1) * radialSegments + next)
-                indices.append(contentsOf: [a, b, c])
-                indices.append(contentsOf: [b, d, c])
-            }
-        }
-
-        let geometry = SCNGeometry(
-            sources: [SCNGeometrySource(vertices: vertices), SCNGeometrySource(normals: normals)],
-            elements: [SCNGeometryElement(indices: indices, primitiveType: .triangles)]
-        )
-        geometry.materials = [material]
-        return geometry
+    private static func surfaceExtent(_ e: Ellipsoid, atWorldY y: Double) -> (x: Double, z: Double) {
+        let localY = (y - Double(e.center.y)) / Double(e.scale.y)
+        let clamped = max(-1, min(1, localY))
+        let factor = (1 - clamped * clamped).squareRoot()
+        return (Double(e.scale.x) * e.radius * factor, Double(e.scale.z) * e.radius * factor)
     }
 
     // MARK: - Scene
@@ -139,100 +84,106 @@ struct HeadVisualizationView: NSViewRepresentable {
         let scene = SCNScene()
         let headGroup = SCNNode()
         headGroup.name = "headGroup"
-        headGroup.position = SCNVector3(0, -0.05, 0)
+        headGroup.position = SCNVector3(0, -0.1, 0)
         scene.rootNode.addChildNode(headGroup)
-
-        // Flattens the revolved (circular) cross-section slightly
-        // front-to-back, the way a real head is narrower depth-wise than
-        // it is across the temples.
-        let headScale = SCNVector3(1.0, 1.05, 0.82)
 
         let skinTone = NSColor(calibratedRed: 0.93, green: 0.92, blue: 0.94, alpha: 1)
         let skinMaterial = matteMaterial(skinTone, roughness: 0.55)
         skinMaterial.specular.contents = NSColor.white.withAlphaComponent(0.25)
 
-        let headNode = SCNNode(geometry: makeHeadGeometry(material: skinMaterial))
-        headNode.scale = headScale
-        headGroup.addChildNode(headNode)
+        let cranium = Ellipsoid(center: SCNVector3(0, 0.08, 0), radius: 1.0, scale: SCNVector3(0.80, 0.95, 0.85))
+        let jaw = Ellipsoid(center: SCNVector3(0, -0.55, 0.05), radius: 0.55, scale: SCNVector3(0.75, 0.58, 0.8))
+        let chin = Ellipsoid(center: SCNVector3(0, -0.97, 0.18), radius: 0.18, scale: SCNVector3(0.9, 0.75, 1.0))
 
-        // Neck: tapers from roughly the jaw width down to the shoulders,
-        // instead of a mismatched cylinder butting into a round skull.
-        let jawWidth = profileRadius(atY: -0.55) * headScale.x
-        let neck = SCNCylinder(radius: jawWidth * 0.85, height: 0.62)
+        for e in [cranium, jaw, chin] {
+            let sphere = SCNSphere(radius: e.radius)
+            sphere.segmentCount = 48
+            sphere.materials = [skinMaterial]
+            let node = SCNNode(geometry: sphere)
+            node.scale = e.scale
+            node.position = e.center
+            headGroup.addChildNode(node)
+        }
+
+        // Neck: matches the jaw's width where it meets the bottom of the head.
+        let neckY = -0.85
+        let neckWidth = surfaceExtent(jaw, atWorldY: neckY).x
+        let neck = SCNCylinder(radius: max(neckWidth * 0.85, 0.18), height: 0.6)
         neck.radialSegmentCount = 32
         neck.materials = [skinMaterial]
         let neckNode = SCNNode(geometry: neck)
-        neckNode.position = SCNVector3(0, -1.02 * headScale.y, 0.02 * headScale.z)
+        neckNode.position = SCNVector3(0, -1.15, 0.04)
         headGroup.addChildNode(neckNode)
 
         let eyelidMaterial = matteMaterial(NSColor(calibratedRed: 0.82, green: 0.78, blue: 0.78, alpha: 1), roughness: 0.5)
         let mouthMaterial = matteMaterial(NSColor(calibratedRed: 0.80, green: 0.62, blue: 0.62, alpha: 1), roughness: 0.6)
         let airPodsMaterial = matteMaterial(.white, roughness: 0.2)
 
-        // Eyes: closed, almond-shaped lids sitting flush on the brow line,
-        // colored a soft shadow tone rather than solid dark "eye holes".
-        let eyeY = 0.27
-        let eyeZ = (profileRadius(atY: eyeY) + 0.015) * headScale.z
+        // Eyes: closed, almond-shaped lids sitting flush on the cranium's
+        // brow line, colored a soft shadow tone rather than solid dark
+        // "eye holes".
+        let eyeY = 0.30
+        let eyeZ = surfaceExtent(cranium, atWorldY: eyeY).z + 0.02
         for side: CGFloat in [-1, 1] {
             let eyelid = SCNCapsule(capRadius: 0.028, height: 0.16)
             eyelid.materials = [eyelidMaterial]
             let eyelidNode = SCNNode(geometry: eyelid)
             eyelidNode.eulerAngles.z = .pi / 2
             eyelidNode.scale = SCNVector3(1, 0.55, 1)
-            eyelidNode.position = SCNVector3(side * 0.27 * headScale.x, eyeY * headScale.y, eyeZ)
+            eyelidNode.position = SCNVector3(side * 0.26, CGFloat(eyeY), CGFloat(eyeZ))
             headGroup.addChildNode(eyelidNode)
         }
 
         // Nose: soft bridge + rounded tip rather than a sharp cone.
         let noseBridgeY = 0.05
-        let noseTipY = -0.12
-        let bridgeZ = (profileRadius(atY: noseBridgeY) - 0.01) * headScale.z
-        let tipZ = (profileRadius(atY: noseTipY) + 0.14) * headScale.z
-        let bridge = SCNCapsule(capRadius: 0.045, height: 0.22)
+        let noseTipY = -0.14
+        let bridgeZ = surfaceExtent(cranium, atWorldY: noseBridgeY).z - 0.01
+        let tipZ = surfaceExtent(cranium, atWorldY: noseTipY).z + 0.14
+        let bridge = SCNCapsule(capRadius: 0.045, height: 0.2)
         bridge.materials = [skinMaterial]
         let bridgeNode = SCNNode(geometry: bridge)
-        bridgeNode.eulerAngles.x = .pi / 2.55
-        bridgeNode.position = SCNVector3(0, (noseBridgeY + noseTipY) / 2 * headScale.y, (bridgeZ + tipZ) / 2)
+        bridgeNode.eulerAngles.x = .pi / 2.5
+        bridgeNode.position = SCNVector3(0, CGFloat((noseBridgeY + noseTipY) / 2), CGFloat((bridgeZ + tipZ) / 2))
         headGroup.addChildNode(bridgeNode)
 
         let tip = SCNSphere(radius: 0.06)
         tip.materials = [skinMaterial]
         let tipNode = SCNNode(geometry: tip)
-        tipNode.position = SCNVector3(0, noseTipY * headScale.y, tipZ)
+        tipNode.position = SCNVector3(0, CGFloat(noseTipY), CGFloat(tipZ))
         headGroup.addChildNode(tipNode)
 
-        // Mouth: thin, gently rounded lip line.
+        // Mouth: sits on the jaw ellipsoid, not the cranium.
         let mouthY = -0.42
-        let mouthZ = (profileRadius(atY: mouthY) + 0.03) * headScale.z
-        let mouth = SCNCapsule(capRadius: 0.022, height: 0.3)
+        let mouthZ = surfaceExtent(jaw, atWorldY: mouthY).z + 0.02
+        let mouth = SCNCapsule(capRadius: 0.022, height: 0.28)
         mouth.materials = [mouthMaterial]
         let mouthNode = SCNNode(geometry: mouth)
         mouthNode.eulerAngles.z = .pi / 2
         mouthNode.scale = SCNVector3(1, 0.6, 1)
-        mouthNode.position = SCNVector3(0, mouthY * headScale.y, mouthZ)
+        mouthNode.position = SCNVector3(0, CGFloat(mouthY), CGFloat(mouthZ))
         headGroup.addChildNode(mouthNode)
 
-        // Ears + AirPods, at the widest (temple) part of the head.
-        let earY = 0.18
-        let earX = (profileRadius(atY: earY) + 0.02) * headScale.x
+        // Ears + AirPods, at the widest part of the cranium.
+        let earY = 0.12
+        let earX = surfaceExtent(cranium, atWorldY: earY).x + 0.02
         for side: CGFloat in [-1, 1] {
             let ear = SCNSphere(radius: 0.13)
             ear.materials = [skinMaterial]
             let earNode = SCNNode(geometry: ear)
             earNode.scale = SCNVector3(0.45, 1.0, 0.75)
-            earNode.position = SCNVector3(side * earX, earY * headScale.y, 0.02)
+            earNode.position = SCNVector3(side * CGFloat(earX), CGFloat(earY), 0.02)
             headGroup.addChildNode(earNode)
 
             let bud = SCNSphere(radius: 0.07)
             bud.materials = [airPodsMaterial]
             let budNode = SCNNode(geometry: bud)
-            budNode.position = SCNVector3(side * (earX + 0.05), earY * headScale.y + 0.01, 0.09)
+            budNode.position = SCNVector3(side * CGFloat(earX + 0.05), CGFloat(earY) + 0.01, 0.09)
             headGroup.addChildNode(budNode)
 
             let stem = SCNCapsule(capRadius: 0.026, height: 0.4)
             stem.materials = [airPodsMaterial]
             let stemNode = SCNNode(geometry: stem)
-            stemNode.position = SCNVector3(side * (earX + 0.07), earY * headScale.y - 0.28, 0.13)
+            stemNode.position = SCNVector3(side * CGFloat(earX + 0.07), CGFloat(earY) - 0.28, 0.13)
             stemNode.eulerAngles.z = side * (.pi / 11)
             headGroup.addChildNode(stemNode)
         }
@@ -245,7 +196,7 @@ struct HeadVisualizationView: NSViewRepresentable {
             camera.fieldOfView = 30
             return camera
         }()
-        cameraNode.position = SCNVector3(0, 0.1, 4.6)
+        cameraNode.position = SCNVector3(0, 0.05, 4.6)
         scene.rootNode.addChildNode(cameraNode)
 
         let keyLightNode = SCNNode()
