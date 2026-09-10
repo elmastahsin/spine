@@ -1,0 +1,465 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Calibrate" : {
+      "comment" : "Button to start calibration",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrate"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalibre et"
+          }
+        }
+      }
+    },
+    "Calibration complete." : {
+      "comment" : "Spoken message on successful calibration",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration complete."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalibrasyon tamam."
+          }
+        }
+      }
+    },
+    "Calibration needed" : {
+      "comment" : "Title shown when calibration is required",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibration needed"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalibrasyon gerekli"
+          }
+        }
+      }
+    },
+    "Calibrating…" : {
+      "comment" : "Calibration in-progress title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calibrating…"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalibre ediliyor…"
+          }
+        }
+      }
+    },
+    "Connect your AirPods" : {
+      "comment" : "Title shown while waiting for AirPods",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connect your AirPods"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPods'unu tak"
+          }
+        }
+      }
+    },
+    "Cooldown" : {
+      "comment" : "Cooldown picker label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cooldown"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekleme süresi"
+          }
+        }
+      }
+    },
+    "Deviation:" : {
+      "comment" : "Label prefix for the live posture deviation reading",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deviation:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sapma:"
+          }
+        }
+      }
+    },
+    "High" : {
+      "comment" : "High sensitivity option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yüksek"
+          }
+        }
+      }
+    },
+    "Lift your head" : {
+      "comment" : "Spoken posture nudge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lift your head"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Başını kaldır"
+          }
+        }
+      }
+    },
+    "Low" : {
+      "comment" : "Low sensitivity option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Düşük"
+          }
+        }
+      }
+    },
+    "Medium" : {
+      "comment" : "Medium sensitivity option",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Orta"
+          }
+        }
+      }
+    },
+    "Pause" : {
+      "comment" : "Button to pause monitoring",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duraklat"
+          }
+        }
+      }
+    },
+    "Paused" : {
+      "comment" : "Title shown while monitoring is paused",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duraklatıldı"
+          }
+        }
+      }
+    },
+    "Posture is bad" : {
+      "comment" : "Status line when posture is bad",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posture is bad"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postür bozuk"
+          }
+        }
+      }
+    },
+    "Posture is good" : {
+      "comment" : "Status line when posture is good",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Posture is good"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Postür iyi"
+          }
+        }
+      }
+    },
+    "Quit" : {
+      "comment" : "Quit menu item",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çık"
+          }
+        }
+      }
+    },
+    "Recalibrate" : {
+      "comment" : "Button to restart calibration",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recalibrate"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yeniden kalibre et"
+          }
+        }
+      }
+    },
+    "Resume" : {
+      "comment" : "Button to resume monitoring",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devam et"
+          }
+        }
+      }
+    },
+    "Roll your shoulders back" : {
+      "comment" : "Spoken posture nudge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roll your shoulders back"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Omuzlarını geri al"
+          }
+        }
+      }
+    },
+    "Sensitivity" : {
+      "comment" : "Sensitivity picker label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensitivity"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hassasiyet"
+          }
+        }
+      }
+    },
+    "Sit up straight" : {
+      "comment" : "Spoken posture nudge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sit up straight"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dik dur"
+          }
+        }
+      }
+    },
+    "Sit up straight and look at the screen." : {
+      "comment" : "Spoken prompt at the start of calibration",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sit up straight and look at the screen."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dik otur ve ekrana bak."
+          }
+        }
+      }
+    },
+    "Spine tracks posture using your AirPods' head motion sensors." : {
+      "comment" : "Explanation shown while waiting for AirPods",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spine tracks posture using your AirPods' head motion sensors."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spine, AirPods'unun hareket sensörlerini kullanarak postürünü takip eder."
+          }
+        }
+      }
+    },
+    "Voice alerts" : {
+      "comment" : "Voice alerts toggle label",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voice alerts"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sesli uyarı"
+          }
+        }
+      }
+    },
+    "You moved too much. Try again." : {
+      "comment" : "Shown after a rejected calibration attempt / spoken message when calibration is rejected",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You moved too much. Try again."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Çok hareket ettin, tekrar dene."
+          }
+        }
+      }
+    },
+    "You're sinking into the screen" : {
+      "comment" : "Spoken posture nudge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You're sinking into the screen"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ekrana gömüldün, dikleş"
+          }
+        }
+      }
+    },
+    "s" : {
+      "comment" : "Abbreviation for seconds, shown after a cooldown number",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "s"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "sn"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

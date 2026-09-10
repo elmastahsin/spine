@@ -68,7 +68,7 @@ struct MenuContentView: View {
                 .font(.headline)
 
             if let deviation = viewModel.currentDeviationDegrees {
-                Text(String(localized: "Deviation: \(Int(deviation.rounded()))°", comment: "Live posture deviation reading"))
+                Text("\(String(localized: "Deviation:", comment: "Label prefix for the live posture deviation reading")) \(Int(deviation.rounded()))°")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
@@ -82,7 +82,7 @@ struct MenuContentView: View {
 
             Picker(String(localized: "Cooldown", comment: "Cooldown picker label"), selection: cooldownBinding) {
                 ForEach(SettingsStore.cooldownOptions, id: \.self) { seconds in
-                    Text(String(localized: "\(Int(seconds))s", comment: "Cooldown option in seconds")).tag(seconds)
+                    Text("\(Int(seconds)) \(String(localized: "s", comment: "Abbreviation for seconds, shown after a cooldown number"))").tag(seconds)
                 }
             }
             .pickerStyle(.menu)
