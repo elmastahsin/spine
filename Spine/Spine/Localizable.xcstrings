@@ -1,6 +1,40 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "100% On-Device Motion · Zero Network · Open Source" : {
+      "comment" : "Privacy footer badge",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100% On-Device Motion · Zero Network · Open Source"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%100 Cihaz Üzerinde · Sıfır Ağ · Açık Kaynak"
+          }
+        }
+      }
+    },
+    "AirPods · Motion Active" : {
+      "comment" : "Status badge shown when AirPods head motion tracking is active",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPods · Motion Active"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AirPods · Hareket Aktif"
+          }
+        }
+      }
+    },
     "Automatic" : {
       "comment" : "Automatic voice gender option",
       "localizations" : {
@@ -460,6 +494,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sistem"
+          }
+        }
+      }
+    },
+    "Threshold:" : {
+      "comment" : "Label prefix for the current sensitivity threshold, shown under the deviation meter",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Threshold:"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eşik:"
           }
         }
       }

@@ -7,7 +7,13 @@ struct MenuContentView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            brandHeader
+            HStack {
+                brandHeader
+                Spacer()
+                if isAirPodsConnected {
+                    airPodsStatusBadge
+                }
+            }
 
             switch viewModel.state {
             case .waitingForAirPods:
@@ -22,25 +28,57 @@ struct MenuContentView: View {
                 pausedContent
             }
 
-            Divider()
+            privacyBadge
 
-            HStack {
+            Divider()
+                .overlay(Color.white.opacity(0.08))
+
+            HStack(spacing: 12) {
                 languagePicker
+
+                Button {
+                    NSWorkspace.shared.open(Self.githubURL)
+                } label: {
+                    Image(systemName: "chevron.left.forwardslash.chevron.right")
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
+                .help(Self.githubURL.absoluteString)
 
                 Spacer()
 
                 Button {
                     NSApplication.shared.terminate(nil)
                 } label: {
-                    Text(viewModel.localized("Quit", comment: "Quit menu item"))
+                    HStack(spacing: 4) {
+                        Text(viewModel.localized("Quit", comment: "Quit menu item"))
+                        Text(verbatim: "⌘Q")
+                            .foregroundStyle(.tertiary)
+                    }
                 }
                 .buttonStyle(.plain)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+                .keyboardShortcut("q", modifiers: .command)
             }
         }
         .padding(14)
         .frame(width: 280)
+        .background(.ultraThinMaterial)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .shadow(color: .black.opacity(0.35), radius: 20, y: 8)
+        .preferredColorScheme(.dark)
+    }
+
+    private static let githubURL = URL(string: "https://github.com/elmastahsin/spine")!
+
+    private var isAirPodsConnected: Bool {
+        if case .waitingForAirPods = viewModel.state { return false }
+        return true
     }
 
     // MARK: - Brand
@@ -55,6 +93,32 @@ struct MenuContentView: View {
                 .foregroundStyle(.secondary)
             Spacer()
         }
+    }
+
+    private var airPodsStatusBadge: some View {
+        HStack(spacing: 5) {
+            Circle()
+                .fill(Color.green)
+                .frame(width: 6, height: 6)
+            Text(viewModel.localized("AirPods · Motion Active", comment: "Status badge shown when AirPods head motion tracking is active"))
+                .font(.caption2)
+                .fontWeight(.medium)
+                .foregroundStyle(.green)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.green.opacity(0.12), in: Capsule())
+    }
+
+    private var privacyBadge: some View {
+        HStack(spacing: 5) {
+            Image(systemName: "lock.shield.fill")
+                .font(.caption2)
+            Text(viewModel.localized("100% On-Device Motion · Zero Network · Open Source", comment: "Privacy footer badge"))
+                .font(.caption2)
+        }
+        .foregroundStyle(.tertiary)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     // MARK: - States
@@ -128,17 +192,20 @@ struct MenuContentView: View {
 
                     DeviationMeter(
                         deviationDegrees: deviation,
-                        thresholdDegrees: viewModel.settings.sensitivity.thresholdDegrees,
-                        tint: statusTint(status)
+                        thresholdDegrees: viewModel.settings.sensitivity.thresholdDegrees
                     )
+
+                    Text(verbatim: "\(viewModel.localized("Threshold:", comment: "Label prefix for the current sensitivity threshold, shown under the deviation meter")) \(Int(viewModel.settings.sensitivity.thresholdDegrees))°")
+                        .font(.caption2)
+                        .foregroundStyle(.tertiary)
                 }
             }
 
             VStack(alignment: .leading, spacing: 10) {
                 Picker(viewModel.localized("Sensitivity", comment: "Sensitivity picker label"), selection: sensitivityBinding) {
-                    Text(viewModel.localized("Low", comment: "Low sensitivity option")).tag(PostureSensitivity.low)
-                    Text(viewModel.localized("Medium", comment: "Medium sensitivity option")).tag(PostureSensitivity.medium)
-                    Text(viewModel.localized("High", comment: "High sensitivity option")).tag(PostureSensitivity.high)
+                    ForEach(PostureSensitivity.allCases, id: \.self) { level in
+                        Text(verbatim: "\(sensitivityLabel(level)) (\(Int(level.thresholdDegrees))°)").tag(level)
+                    }
                 }
                 .pickerStyle(.menu)
 
@@ -218,6 +285,14 @@ struct MenuContentView: View {
         }
     }
 
+    private func sensitivityLabel(_ level: PostureSensitivity) -> String {
+        switch level {
+        case .low: return viewModel.localized("Low", comment: "Low sensitivity option")
+        case .medium: return viewModel.localized("Medium", comment: "Medium sensitivity option")
+        case .high: return viewModel.localized("High", comment: "High sensitivity option")
+        }
+    }
+
     private func statusIcon(_ status: PostureStatus) -> String {
         switch status {
         case .good: return "checkmark.circle.fill"
@@ -294,15 +369,23 @@ private struct SpineMark: View {
 
 /// Small horizontal bar showing live deviation as a fraction of the current
 /// sensitivity threshold (capped at 130% of threshold so it doesn't clip).
+/// Filled with a green-to-red gradient and marked with a tick at the
+/// threshold, so the transition from neutral to "bad" posture is legible at
+/// a glance rather than only implied by the fill color.
 private struct DeviationMeter: View {
     let deviationDegrees: Double
     let thresholdDegrees: Double
-    let tint: Color
+
+    private var cap: Double { thresholdDegrees * 1.3 }
 
     private var ratio: Double {
         guard thresholdDegrees > 0 else { return 0 }
-        let cap = thresholdDegrees * 1.3
         return min(deviationDegrees, cap) / cap
+    }
+
+    private var thresholdRatio: Double {
+        guard thresholdDegrees > 0 else { return 0 }
+        return thresholdDegrees / cap
     }
 
     var body: some View {
@@ -310,10 +393,22 @@ private struct DeviationMeter: View {
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(Color.secondary.opacity(0.15))
+
                 RoundedRectangle(cornerRadius: 3)
-                    .fill(tint)
+                    .fill(
+                        LinearGradient(
+                            colors: [.green, .yellow, .red],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
                     .frame(width: proxy.size.width * ratio)
                     .animation(.easeInOut(duration: 0.2), value: ratio)
+
+                Rectangle()
+                    .fill(Color.white.opacity(0.9))
+                    .frame(width: 1.5)
+                    .offset(x: proxy.size.width * thresholdRatio)
             }
         }
         .frame(height: 6)
